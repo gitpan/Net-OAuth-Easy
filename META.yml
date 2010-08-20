@@ -18,8 +18,9 @@ requires:
   Crypt::OpenSSL::RSA: 0
   Data::Validate::URI: 0
   Digest::MD5: 0
+  File::Slurp: 0
   Moose: 0
   Net::OAuth: 0
   Test::Most: 0
   Test::WWW::Mechanize: 0
-version: 0.001_01
+version: 0.001_02

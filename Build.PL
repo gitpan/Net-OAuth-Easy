@@ -17,7 +17,7 @@ my %module_build_args = (
     'Ben Hengst <notbenh@cpan.org>'
   ],
   'dist_name' => 'Net-OAuth-Easy',
-  'dist_version' => '0.001_01',
+  'dist_version' => '0.001_02',
   'license' => 'perl',
   'module_name' => 'Net::OAuth::Easy',
   'recommends' => {},
@@ -27,6 +27,7 @@ my %module_build_args = (
     'Crypt::OpenSSL::RSA' => '0',
     'Data::Validate::URI' => '0',
     'Digest::MD5' => '0',
+    'File::Slurp' => '0',
     'Moose' => '0',
     'Net::OAuth' => '0',
     'Test::Most' => '0',

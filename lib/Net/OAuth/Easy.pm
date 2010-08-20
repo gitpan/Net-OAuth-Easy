@@ -1,6 +1,6 @@
 package Net::OAuth::Easy;
 BEGIN {
-  $Net::OAuth::Easy::VERSION = '0.001_01';
+  $Net::OAuth::Easy::VERSION = '0.001_02';
 }
 use Moose;
 use Digest::MD5 qw{md5_hex};
