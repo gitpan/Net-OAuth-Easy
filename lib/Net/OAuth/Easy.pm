@@ -1,6 +1,6 @@
 package Net::OAuth::Easy;
 BEGIN {
-  $Net::OAuth::Easy::VERSION = '0.001_02';
+  $Net::OAuth::Easy::VERSION = '0.001_03';
 }
 use Moose;
 use Digest::MD5 qw{md5_hex};
@@ -28,12 +28,15 @@ has protocol => (
    isa => 'OAuthProtocol',
    lazy => 1,
    default => sub{'1.0a'},
-   trigger => sub{$Net::OAuth::PROTOCOL_VERSION = (shift->protocol eq '1.0a') ? &Net::OAuth::PROTOCOL_VERSION_1_0A : &Net::OAuth::PROTOCOL_VERSION_1_0;},
+   trigger => \&set_net_oauth_protocol,
 );
+sub set_net_oauth_protocol { 
+   $Net::OAuth::PROTOCOL_VERSION = (shift->protocol eq '1.0a') ? &Net::OAuth::PROTOCOL_VERSION_1_0A : &Net::OAuth::PROTOCOL_VERSION_1_0;
+}
 
 sub BUILD {
    my $self = shift;
-   $Net::OAuth::PROTOCOL_VERSION = ($self->protocol eq '1.0a') ? &Net::OAuth::PROTOCOL_VERSION_1_0A : &Net::OAuth::PROTOCOL_VERSION_1_0;
+   $self->set_net_oauth_protocol;
 }
 
 has $_ => (
@@ -75,24 +78,70 @@ sub nonce { md5_hex( join '', rand(2**32), time, rand(2**32) ); };
 
 has request_parameters => (
    is => 'rw',
-   isa => 'ArrayRef',
-   auto_deref => 1,
-   default => sub{[qw{ consumer_key 
-                       consumer_secret 
-                       request_url 
-                       request_method 
-                       signature_key 
-                       signature_method 
-                       timestamp 
-                       nonce 
-                       callback 
-                       token
-                       token_secret
-                       verifier
-   }]},
+   isa => 'HashRef[ArrayRef]',
+   default => sub{{ request_token => [qw{consumer_key 
+                                         consumer_secret 
+                                         request_url 
+                                         request_method 
+                                         signature_key 
+                                         signature_method 
+                                         timestamp 
+                                         nonce 
+                                         callback 
+                                         token
+                                         token_secret
+                                         verifier
+                                        }],
+                    access_token  => [qw{consumer_key 
+                                         consumer_secret 
+                                         request_url 
+                                         request_method 
+                                         signature_key 
+                                         signature_method 
+                                         timestamp 
+                                         nonce 
+                                         token
+                                         token_secret
+                                         verifier
+                                        }],
+
+                    protected_resource => [qw{
+                                         consumer_key 
+                                         consumer_secret 
+                                         request_url 
+                                         request_method 
+                                         signature_key 
+                                         signature_method 
+                                         timestamp 
+                                         nonce 
+                                         token
+                                         token_secret
+                                         verifier
+                                        }],
+   }},
+);
+
+has exception_handle => (
+   is => 'rw',
+   isa => 'CodeRef',
+   default => sub{sub{shift;die @_}},
 );
 
 sub build_request {
+   my $self = shift;
+   my $type = shift;
+   my $request = Net::OAuth->request($type)->new($self->gather_request_parts($type => @_));
+
+   $self->exception_handle->( q{Unable to sign request} )
+      unless $request->sign;
+
+   $self->exception_handle->( q{Unable to verify request} )
+      unless $request->verify;
+
+   return $request;
+}
+
+sub gather_request_parts {
    my $self = shift;
    my $type = shift;
    my %opts = @_;
@@ -103,22 +152,15 @@ sub build_request {
 
    # pull any overrides from %opts/@_ everything else is pulled from $self
    my %req  = map{ $_ => ( exists $opts{$_} ) ? delete $opts{$_} : ( $self->can($_) ) ? $self->$_ : undef;
-                 } $self->request_parameters;
+                 } @{$self->request_parameters->{ $type } || [] };
    # TODO: this is likely not what we really want in cases where you pass Content, NOS builds the URL and then plucks from that, possibly more accurate?
    $req{extra_params} = \%opts if scalar(keys %opts); # save off anything left from @_ as extra params
 
    $req{protocol_version} = ($self->protocol eq '1.0a') ? &Net::OAuth::PROTOCOL_VERSION_1_0A : &Net::OAuth::PROTOCOL_VERSION_1_0 ;
-
-   my $request = Net::OAuth->request($type)->new(%req);
-
-   die q{Unable to sign request} 
-      unless $request->sign;
-
-   die q{Unable to verify request}
-      unless $request->verify;
-
-   return $request;
+   
+   return %req;
 }
+
 
 has response => (
    is => 'rw',
@@ -142,13 +184,31 @@ sub error{
 }
 
 sub make_request {
-   my $self    = shift;
+   my $self = shift;
+   my $content;
+   # find content if it was passed
+   for (my $i=0; $i<scalar(@_); $i++ ) {
+      if (defined $_[$i] && $_[$i] =~ m/^Content$/i) {
+         $content = delete $_[$i+1];
+         delete $_[$i];
+         last;
+      }
+   }
    $self->clear_response if $self->has_response;
-   my $request = ( ref($_[0]) && $_[0]->isa('Net::OAuth::Message') ) ? $_[0] : $self->build_request(@_);
+   my $request = ( ref($_[0]) && $_[0]->isa('Net::OAuth::Message') ) ? $_[0] : $self->build_request(grep { defined }@_);
 
    my $req = HTTP::Request->new( $request->request_method => $request->to_url );
-   $req->authorization( $request->to_authorization_header );
-   return $req;
+   $req->content($content) if defined $content;
+   return $self->add_auth_headers($req, $request);
+}
+
+sub add_auth_headers {
+   my ($self, $http_req, $oauth_req) = @_;
+   $self->exception_handle( 'HTTP::Request expected as first paramater') unless $http_req->isa('HTTP::Request');
+   $self->exception_handle( 'Net::OAuth::Message expected as second paramater') unless $oauth_req->isa('Net::OAuth::Message');
+   $http_req->authorization( $oauth_req->to_authorization_header )
+      if $self->request_method eq 'POST';
+   return $http_req;
 }
 
 sub send_request {

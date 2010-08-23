@@ -23,4 +23,4 @@ requires:
   Net::OAuth: 0
   Test::Most: 0
   Test::WWW::Mechanize: 0
-version: 0.001_02
+version: 0.001_03
