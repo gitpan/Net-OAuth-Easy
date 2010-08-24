@@ -1,6 +1,6 @@
 package Net::OAuth::Easy::Roles::Types;
 BEGIN {
-  $Net::OAuth::Easy::Roles::Types::VERSION = '0.001_03';
+  $Net::OAuth::Easy::Roles::Types::VERSION = '0.001_04';
 }
 use Moose::Role;
 use Moose::Util::TypeConstraints;
