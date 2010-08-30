@@ -3,7 +3,10 @@ abstract: 'A moose class that abstracts Net::OAuth for you'
 author:
   - 'Ben Hengst <notbenh@cpan.org>'
 build_requires:
+  Carp::Always: 0
   Module::Build: 0.3601
+  Test::Most: 0
+  Test::WWW::Mechanize: 0
 configure_requires:
   Module::Build: 0.3601
 dynamic_config: 0
@@ -14,13 +17,13 @@ meta-spec:
   version: 1.4
 name: Net-OAuth-Easy
 requires:
-  Carp::Always: 0
   Crypt::OpenSSL::RSA: 0
   Data::Validate::URI: 0
   Digest::MD5: 0
   File::Slurp: 0
   Moose: 0
-  Net::OAuth: 0
-  Test::Most: 0
-  Test::WWW::Mechanize: 0
-version: 0.001_04
+  Net::OAuth: 0.27
+resources:
+  bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Net-OAuth-Easy
+  repository: git://github.com/notbenh/Net-OAuth-Easy.git
+version: 0.001_05

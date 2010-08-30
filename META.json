@@ -1,0 +1,59 @@
+{
+   "abstract" : "A moose class that abstracts Net::OAuth for you",
+   "author" : [
+      "Ben Hengst <notbenh@cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 4.101900, CPAN::Meta::Converter version 2.101670",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Net-OAuth-Easy",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Module::Build" : "0.3601"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build" : "0.3601"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Crypt::OpenSSL::RSA" : 0,
+            "Data::Validate::URI" : 0,
+            "Digest::MD5" : 0,
+            "File::Slurp" : 0,
+            "Moose" : 0,
+            "Net::OAuth" : "0.27"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Carp::Always" : 0,
+            "Test::Most" : 0,
+            "Test::WWW::Mechanize" : 0
+         }
+      }
+   },
+   "release_status" : "testing",
+   "resources" : {
+      "bugtracker" : {
+         "mailto" : "bug-net-oauth-easy@rt.cpan.org",
+         "web" : "https://rt.cpan.org/Public/Dist/Display.html?Name=Net-OAuth-Easy"
+      },
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/notbenh/Net-OAuth-Easy.git",
+         "web" : "http://github.com/notbenh/Net-OAuth-Easy"
+      }
+   },
+   "version" : "0.001_05"
+}
+

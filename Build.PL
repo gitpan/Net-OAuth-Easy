@@ -7,7 +7,10 @@ use Module::Build 0.3601;
 
 my %module_build_args = (
   'build_requires' => {
-    'Module::Build' => '0.3601'
+    'Carp::Always' => '0',
+    'Module::Build' => '0.3601',
+    'Test::Most' => '0',
+    'Test::WWW::Mechanize' => '0'
   },
   'configure_requires' => {
     'Module::Build' => '0.3601'
@@ -17,21 +20,18 @@ my %module_build_args = (
     'Ben Hengst <notbenh@cpan.org>'
   ],
   'dist_name' => 'Net-OAuth-Easy',
-  'dist_version' => '0.001_04',
+  'dist_version' => '0.001_05',
   'license' => 'perl',
   'module_name' => 'Net::OAuth::Easy',
   'recommends' => {},
   'recursive_test_files' => 1,
   'requires' => {
-    'Carp::Always' => '0',
     'Crypt::OpenSSL::RSA' => '0',
     'Data::Validate::URI' => '0',
     'Digest::MD5' => '0',
     'File::Slurp' => '0',
     'Moose' => '0',
-    'Net::OAuth' => '0',
-    'Test::Most' => '0',
-    'Test::WWW::Mechanize' => '0'
+    'Net::OAuth' => '0.27'
   },
   'script_files' => []
 );
