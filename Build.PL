@@ -13,6 +13,7 @@ my %module_build_args = (
     'Test::WWW::Mechanize' => '0'
   },
   'configure_requires' => {
+    'ExtUtils::MakeMaker' => '6.31',
     'Module::Build' => '0.3601'
   },
   'dist_abstract' => 'A moose class that abstracts Net::OAuth for you',
@@ -20,7 +21,7 @@ my %module_build_args = (
     'Ben Hengst <notbenh@cpan.org>'
   ],
   'dist_name' => 'Net-OAuth-Easy',
-  'dist_version' => '0.001_05',
+  'dist_version' => '0.001_06',
   'license' => 'perl',
   'module_name' => 'Net::OAuth::Easy',
   'recommends' => {},

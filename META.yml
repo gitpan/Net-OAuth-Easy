@@ -8,6 +8,7 @@ build_requires:
   Test::Most: 0
   Test::WWW::Mechanize: 0
 configure_requires:
+  ExtUtils::MakeMaker: 6.31
   Module::Build: 0.3601
 dynamic_config: 0
 generated_by: 'Dist::Zilla version 4.101900, CPAN::Meta::Converter version 2.101670'
@@ -26,4 +27,4 @@ requires:
 resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Net-OAuth-Easy
   repository: git://github.com/notbenh/Net-OAuth-Easy.git
-version: 0.001_05
+version: 0.001_06

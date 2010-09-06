@@ -5,14 +5,13 @@ LICENSE
 MANIFEST
 META.json
 META.yml
+Makefile.PL
 README
 dist.ini
 lib/Net/OAuth/Easy.pm
 lib/Net/OAuth/Easy/Roles/Types.pm
 t/Easy.t
 t/Types.t
-t/release-eol.t
-t/release-kwalitee.t
 t/release-no-tabs.t
 t/rsa.key
 t/rsa.key.pub

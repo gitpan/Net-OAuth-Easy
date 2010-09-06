@@ -1,6 +1,6 @@
 package Net::OAuth::Easy;
 BEGIN {
-  $Net::OAuth::Easy::VERSION = '0.001_05';
+  $Net::OAuth::Easy::VERSION = '0.001_06';
 }
 use Moose;
 use Digest::MD5 qw{md5_hex};
@@ -224,7 +224,10 @@ sub make_request {
    $self->clear_response if $self->has_response;
    my $request = ( ref($_[0]) && $_[0]->isa('Net::OAuth::Message') ) ? $_[0] : $self->build_request(grep { defined }@_);
 
-   my $req = HTTP::Request->new( $request->request_method => $request->to_url );
+   my $req = HTTP::Request->new( $request->request_method => ( $request->request_method eq 'GET' ) 
+                                                           ? $request->to_url 
+                                                           : $request->request_url
+                               );
    $req->content($content) if defined $content;
    return $self->add_auth_headers($req, $request);
 }
@@ -377,7 +380,46 @@ Net::OAuth::Easy - A moose class that abstracts Net::OAuth for you
 
 =head1 VERSION
 
-version 0.001_05
+version 0.001_06
+
+=head1 SYNOPSIS
+
+  use Net::OAuth::Easy;
+  my $oauth = Net::OAuth::Easy->new( 
+      consumer_key        => $key,
+      consumer_secret     => $secret,
+      request_token_url   => q{http://someplace.com/request_token},
+      authorize_token_url => q{http://someplace.com/authorize},
+      access_token_url    => q{http://someplace.com/access_token},
+      callback            => q{http://here.com/user},
+  );
+  $oauth->get_request_token;
+  # save off request token secret somewhere, you need it later
+  $some_session_idea->request_token_secret($oauth->requset_token_secret);
+
+  my $auth_url   = $oauth->get_authorization_url;
+  # redirect user to $auth_url
+
+  ...
+
+  #reload the token secret
+  $oauth->request_token_secret( $some_session_idea->request_token_secret );
+  $oauth->get_access_token( $q->url );
+  #safe off the access tokens now
+  $some_storage_idea->access_token($oauth->access_token);
+  $some_storage_idea->access_token_secret($oauth->access_token_secret);
+
+  ...
+
+  $oauth->access_token( $some_storage_idea->access_token );
+  $oauth->access_token_secret( $some_storage_idea->access_token_secret );
+  $oauth->get_protected_resource( $restricted_url )
+
+get_access_token
+
+=head1 DESCRIPTION
+
+=head1 OVERVIEW
 
 =head1 ATTRIBUTES
 
@@ -439,7 +481,8 @@ Where to find the signature key, only used for RSA-SHA1 type signatures.
 
 Expected to be passed a Crypt::OpenSSL::RSA object. Though if passed a 
 string, this will be assumped to be a filename and will be passed to 
-the new_private_key method of Crypt::OpenSSL::RSA.
+the new_private_key method of Crypt::OpenSSL::RSA. The object that 
+results will be stored.
 
 =head2 request_parameters
 
