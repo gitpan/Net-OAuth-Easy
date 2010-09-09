@@ -1,6 +1,6 @@
 package Net::OAuth::Easy;
 BEGIN {
-  $Net::OAuth::Easy::VERSION = '0.001_06';
+  $Net::OAuth::Easy::VERSION = '0.001_07';
 }
 use Moose;
 use Digest::MD5 qw{md5_hex};
@@ -224,7 +224,7 @@ sub make_request {
    $self->clear_response if $self->has_response;
    my $request = ( ref($_[0]) && $_[0]->isa('Net::OAuth::Message') ) ? $_[0] : $self->build_request(grep { defined }@_);
 
-   my $req = HTTP::Request->new( $request->request_method => ( $request->request_method eq 'GET' ) 
+   my $req = HTTP::Request->new( $request->request_method => ( $request->request_method eq 'GET' && !$self->include_auth_header_for_GET ) 
                                                            ? $request->to_url 
                                                            : $request->request_url
                                );
@@ -380,7 +380,7 @@ Net::OAuth::Easy - A moose class that abstracts Net::OAuth for you
 
 =head1 VERSION
 
-version 0.001_06
+version 0.001_07
 
 =head1 SYNOPSIS
 

@@ -33,7 +33,7 @@ my %WriteMakefileArgs = (
     'Moose' => '0',
     'Net::OAuth' => '0.27'
   },
-  'VERSION' => '0.001_06',
+  'VERSION' => '0.001_07',
   'test' => {
     'TESTS' => 't/*.t'
   }

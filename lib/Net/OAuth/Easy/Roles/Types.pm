@@ -1,6 +1,6 @@
 package Net::OAuth::Easy::Roles::Types;
 BEGIN {
-  $Net::OAuth::Easy::Roles::Types::VERSION = '0.001_06';
+  $Net::OAuth::Easy::Roles::Types::VERSION = '0.001_07';
 }
 use Moose::Role;
 use Moose::Util::TypeConstraints;
@@ -38,7 +38,7 @@ Net::OAuth::Easy::Roles::Types - Role to tuck away types into
 
 =head1 VERSION
 
-version 0.001_06
+version 0.001_07
 
 =head1 AUTHOR
 

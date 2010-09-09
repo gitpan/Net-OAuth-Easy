@@ -27,4 +27,4 @@ requires:
 resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Net-OAuth-Easy
   repository: git://github.com/notbenh/Net-OAuth-Easy.git
-version: 0.001_06
+version: 0.001_07

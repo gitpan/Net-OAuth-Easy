@@ -21,7 +21,7 @@ my %module_build_args = (
     'Ben Hengst <notbenh@cpan.org>'
   ],
   'dist_name' => 'Net-OAuth-Easy',
-  'dist_version' => '0.001_06',
+  'dist_version' => '0.001_07',
   'license' => 'perl',
   'module_name' => 'Net::OAuth::Easy',
   'recommends' => {},
